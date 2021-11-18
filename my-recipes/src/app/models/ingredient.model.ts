@@ -1,4 +1,4 @@
-export class IngredeientModel{
+export class IngredientModel{
     public id:number;
     public name:string;
     public amount:number;
