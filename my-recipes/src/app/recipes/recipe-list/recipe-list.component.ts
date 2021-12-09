@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RecipeModel } from 'src/app/models/recipe.models';
+
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.css']
+  styleUrls: ['./recipe-list.component.css'],
 })
+
 export class RecipeListComponent implements OnInit {
-  recipes:RecipeModel[]=[
+  @Output() recipeSelectedInList = new EventEmitter<RecipeModel>()
+
+  recipes: RecipeModel[] = [
     new RecipeModel(
       'Spaghetti alla chitarra',
       'Un particolare tipo di pasta che ...',
@@ -21,8 +25,8 @@ export class RecipeListComponent implements OnInit {
     ),
 
     new RecipeModel(
-      'Ravioles al Formaggio',
-      'Ottimi soprattutto in Val Varaita nell variante Ravioles...',
+      'Ravioles Val Varaita',
+      'Variante dei gnocchi ai formaggi della Val Varaita ...',
       'https://media-cdn.tripadvisor.com/media/photo-s/14/b1/37/d3/ravioles-della-valle.jpg'
     ),
 
@@ -31,14 +35,17 @@ export class RecipeListComponent implements OnInit {
       'Classico dolce italiano con mascarpone ...',
       'https://toscanedigusto.com/wp-content/uploads/2019/09/maxresdefault.jpg'
     )
-  ]
+  ];
 
-  selectedRecipe:RecipeModel
+  selectedRecipe: RecipeModel
+
   constructor() {
-    this.selectedRecipe=this.recipes[0]
-   }
-
-  ngOnInit(): void {
+    this.selectedRecipe = this.recipes[0]
   }
 
+  ngOnInit(): void {}
+
+  onRecipeSelected(recipe: RecipeModel) {
+    this.recipeSelectedInList.emit(recipe)
+  }
 }
