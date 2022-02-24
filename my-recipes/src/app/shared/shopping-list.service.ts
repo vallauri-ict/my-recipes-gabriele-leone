@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DataStorageService } from './data-storage.service';
 import { IngredientModel } from '../models/ingredient.model';
+import { DataStorageService } from './data-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,10 +8,10 @@ import { IngredientModel } from '../models/ingredient.model';
 export class ShoppingListService {
   ingredients: IngredientModel[] = [];
 
-  constructor(private dataStorageService: DataStorageService) {}
+  constructor(private dataStrorageService: DataStorageService) {}
 
   getIngredients() {
-    this.dataStorageService.sendGetRequest('shopping-list').subscribe(
+    this.dataStrorageService.sendGetRequest('shopping-list').subscribe(
       (data) => {
         this.ingredients = data as IngredientModel[];
       },
@@ -23,51 +23,43 @@ export class ShoppingListService {
 
   addIngredient(ingredient: IngredientModel) {
     let ingredientFound = false;
-    for (let item of this.ingredients) {
-      if (item.name.toLowerCase() == ingredient.name.toLowerCase()) {
+    for (const item of this.ingredients) {
+      if (item.name.toUpperCase() == ingredient.name.toUpperCase()) {
         ingredientFound = true;
         item.amount += ingredient.amount;
-        this.patchIngredient({ amount: item.amount }, item.id);
+        this.pacthIngredients({amout: item.amount}, item.id)
         break;
       }
     }
     if (!ingredientFound) {
       this.ingredients.push(ingredient);
-      this.postIngredient(ingredient);
+      this.postIngredients(ingredient)
     }
   }
 
   addIngredients(ingredients: IngredientModel[]) {
     // this.ingredients.push(...ingredients);
     for (const ingredient of ingredients) {
-      this.addIngredient(ingredient);
+      this.addIngredient(ingredient)
     }
   }
 
-  postIngredient = (ingredient: IngredientModel) => {
-    this.dataStorageService
-      .sendPostRequest('shopping-list', ingredient)
+  postIngredients = (ingredient: IngredientModel) => {
+    this.dataStrorageService
+      .sendPosttRequest('shopping-list/' , ingredient)
       .subscribe(
-        (succ) => {
-          console.log(succ);
-          this.getIngredients();
-        },
-        (err) => {
-          console.error(err);
-        }
+        (succ) => console.log(succ),
+        (err) => console.log(err)
       );
   };
 
-  patchIngredient = (data: any, id: number) => {
-    this.dataStorageService
-      .sendPatchtRequest('shopping-list/' + id, data)
+
+  pacthIngredients = (data: any, id:number) => {
+    this.dataStrorageService
+      .sendPatchRequest('shopping-list/' + id, data)
       .subscribe(
-        (succ) => {
-          console.log(succ);
-        },
-        (err) => {
-          console.error(err);
-        }
+        (succ) => console.log(succ),
+        (err) => console.log(err)
       );
-  };
+  }
 }

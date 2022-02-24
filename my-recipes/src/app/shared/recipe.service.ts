@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DataStorageService } from 'src/app/shared/data-storage.service';
-import { RecipeModel } from './../models/recipe.model';
+import { RecipeModel } from '../models/recipe.model';
+import { DataStorageService } from './data-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +14,24 @@ export class RecipeService {
 
   getRecipes() {
     this.dataStorageService.sendGetRequest('recipes').subscribe(
-      data => {
-        // console.log(data);
+      (data) => {
         this.recipes = data as RecipeModel[];
         // this.selectedRecipe = this.recipes[0];
       },
-      error => {
+      (error) => {
         console.error(error);
       }
-    )
+    );
   }
-  
+
+  getRecipe(index: any) {
+    this.dataStorageService.sendGetRequest('recipes/' + index).subscribe(
+      (data) => {
+        this.selectedRecipe = data as RecipeModel
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 }
